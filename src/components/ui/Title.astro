@@ -1,0 +1,16 @@
+---
+interface Props {
+    align?: "left" | "center" | "right";
+    transitionName?: string;
+}
+
+const { align = "left", transitionName } = Astro.props;
+---
+
+<h1
+    id="heading"
+    transition:name={transitionName}
+    class={`py-4 px-8 text-[8vw] tracking-tight text-nowrap font-extrabold text-primary-600 dark:text-primary-500 ${align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left"}`}
+>
+    <slot />
+</h1>

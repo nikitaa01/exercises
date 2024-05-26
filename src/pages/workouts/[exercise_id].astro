@@ -1,0 +1,42 @@
+---
+import ExerciseFillForm from "../../components/ExerciseFillForm";
+import Description from "../../components/ui/Description.astro";
+import Title from "../../components/ui/Title.astro";
+import Layout from "../../layouts/Layout.astro";
+import { supabase } from "../../lib/supabase";
+
+const { exercise_id } = Astro.params;
+
+if (!exercise_id) {
+    return new Response(null, {
+        status: 404,
+        statusText: "Not found",
+    });
+}
+
+const { data: exercise } = await supabase
+    .from("exercises")
+    .select("*")
+    .eq("id", exercise_id)
+    .single();
+
+if (!exercise) {
+    return new Response(null, {
+        status: 404,
+        statusText: "Not found",
+    });
+}
+---
+
+<Layout title={exercise.name}>
+    <Title align="left" transitionName={exercise.id}>
+        {exercise.name}
+    </Title>
+    <Description>
+        {exercise.description}
+        <span class="ml-1">
+            {exercise.muscle_group}
+        </span>
+    </Description>
+    <ExerciseFillForm exercise={exercise} />
+</Layout>

@@ -1,0 +1,34 @@
+---
+import Github from "../components/ui/icons/Github.tsx";
+import Layout from "../layouts/Layout.astro";
+import { supabase } from "../lib/supabase";
+
+const { redirect } = Astro;
+
+const user = await supabase.from("users").select().single();
+
+if (user.data) {
+    return redirect("/");
+}
+---
+
+<Layout title="Inicia sesión">
+    <div class="flex items-center justify-center w-full h-screen">
+        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow">
+            <h1 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                Inicia sesión
+            </h1>
+            <form action="/api/auth/signin" data-astro-reload method="POST">
+                <button
+                    value="github"
+                    name="provider"
+                    type="submit"
+                    class="text-white bg-[#24292F] hover:bg-[#24292F]/90 focus:ring-4 focus:outline-none focus:ring-[#24292F]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 dark:hover:bg-[#050708]/30 me-2 mb-2"
+                >
+                    <Github />
+                    Inicia sesión con Github
+                </button>
+            </form>
+        </div>
+    </div>
+</Layout>

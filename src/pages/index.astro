@@ -1,0 +1,40 @@
+---
+import CompleteWorkoutButton from "../components/CompleteWorkoutButton";
+import Exercise from "../components/Exercise.astro";
+import Description from "../components/ui/Description.astro";
+import Title from "../components/ui/Title.astro";
+import Layout from "../layouts/Layout.astro";
+import { supabase } from "../lib/supabase";
+
+const { data: workout } = await supabase
+    .from("workouts")
+    .select("*, routines(*, exercises(*))")
+    .limit(1)
+    .eq("completed", false)
+    .maybeSingle();
+
+if (!workout?.routines) {
+    return Astro.redirect("/signin");
+}
+---
+
+<Layout title="exercises nikita">
+    <Title>
+        {workout.routines.name}
+    </Title>
+    <Description>
+        {workout.routines.description}
+    </Description>
+    <div
+        class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] place-content-center gap-8 p-8"
+    >
+        {
+            workout.routines.exercises.map((exercise) => (
+                <Exercise {...exercise} workout_id={workout.id} />
+            ))
+        }
+    </div>
+    <div class="p-8 pt-0">
+        <CompleteWorkoutButton client:load />
+    </div>
+</Layout>
