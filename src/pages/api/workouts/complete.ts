@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
 import { supabase } from "../../../lib/supabase";
 
-export const PATCH: APIRoute = async () => {
-  const { data } = await supabase
+export const PATCH: APIRoute = async ({ cookies }) => {
+  const { data } = await supabase(cookies)
     .from('workouts')
     .update({ completed: true })
     .eq('completed', false)
