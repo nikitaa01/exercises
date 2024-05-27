@@ -6,7 +6,9 @@ import Title from "../components/ui/Title.astro";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
 
-const { data: workout } = await supabase
+const { cookies } = Astro;
+
+const { data: workout } = await supabase(cookies)
     .from("workouts")
     .select("*, routines(*, exercises(*))")
     .limit(1)

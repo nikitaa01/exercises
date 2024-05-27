@@ -3,9 +3,9 @@ import Github from "../components/ui/icons/Github.tsx";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
 
-const { redirect } = Astro;
+const { redirect, cookies } = Astro;
 
-const user = await supabase.from("users").select().single();
+const user = await supabase(cookies).from("users").select().single();
 
 if (user.data) {
     return redirect("/");
