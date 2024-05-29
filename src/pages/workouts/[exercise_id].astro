@@ -5,7 +5,7 @@ import Title from "../../components/ui/Title.astro";
 import Layout from "../../layouts/Layout.astro";
 import { supabase } from "../../lib/supabase";
 
-const { cookies } = Astro;
+const { cookies, url } = Astro;
 const { exercise_id } = Astro.params;
 
 if (!exercise_id) {
@@ -15,7 +15,9 @@ if (!exercise_id) {
     });
 }
 
-const { data: exercise } = await supabase(cookies)
+const supabaseClient = supabase(cookies);
+
+const { data: exercise } = await supabaseClient
     .from("exercises")
     .select("*")
     .eq("id", exercise_id)
@@ -27,6 +29,13 @@ if (!exercise) {
         statusText: "Not found",
     });
 }
+
+const { data: defaultRepetitions } = await supabaseClient
+    .from("workouts_repetitions")
+    .select("*, workouts(completed)")
+    .eq("workouts.completed", false)
+    .eq("exercise_id", exercise_id)
+    .order("order", { ascending: false });
 ---
 
 <Layout title={exercise.name}>
@@ -39,5 +48,9 @@ if (!exercise) {
             {exercise.muscle_group}
         </span>
     </Description>
-    <ExerciseFillForm exercise={exercise} />
+    <ExerciseFillForm
+        defaultRepetitions={defaultRepetitions ?? []}
+        exercise={exercise}
+        client:load
+    />
 </Layout>
