@@ -16,7 +16,7 @@ const { data: workout } = await supabase(cookies)
     .maybeSingle();
 
 if (!workout?.routines) {
-    return Astro.redirect("/signin");
+    return new Response("No workout found", { status: 404 });
 }
 ---
 
