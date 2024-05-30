@@ -19,13 +19,17 @@ export default function ExerciseFillForm({ exercise, defaultRepetitions }: { exe
     })
   }
 
+  const removeRepetition = (repetition: Tables<"workouts_repetitions">) => {
+    setRepetitions(prev => prev.filter(r => r.id !== repetition.id))
+  }
+
   return (
     <section
       className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] place-content-center gap-8 p-8"
     >
       <CurrentRepetitionItem exercise={exercise} index={repetitions.length} lastRepetition={repetitions?.[0]} addRepetition={addRepetition} />
       {repetitions.map((repetition) => (
-        <StoredRepetitionItem key={repetition.id} exercise={exercise} repetition={repetition} updateRepetition={updateRepetition} />
+        <StoredRepetitionItem key={repetition.id} exercise={exercise} repetition={repetition} updateRepetition={updateRepetition} removeRepetition={removeRepetition} />
       ))}
     </section>
   )

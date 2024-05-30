@@ -12,8 +12,8 @@ export const POST: APIRoute = async ({ params, cookies, request }) => {
 
   const body = await request.json()
 
-  if (!body.repetitions || !body.weight || !body.id) {
-    return new Response(JSON.stringify({ error: "repetitions, weight and id are required" }), { status: 400 });
+  if (!body.id) {
+    return new Response(JSON.stringify({ error: "id is required" }), { status: 400 });
   }
 
   const { id } = body

@@ -9,8 +9,9 @@ interface StoredRepetitionItemProps {
   exercise: Tables<"exercises">,
   repetition: Tables<"workouts_repetitions">,
   updateRepetition: (repetition: Tables<"workouts_repetitions">) => void
+  removeRepetition: (repetition: Tables<"workouts_repetitions">) => void
 }
-export default function StoredRepetitionItem({ exercise, repetition, updateRepetition }: StoredRepetitionItemProps) {
+export default function StoredRepetitionItem({ exercise, repetition, updateRepetition, removeRepetition }: StoredRepetitionItemProps) {
   const [formDisabled, setFormDisabled] = useState(true)
   const [loading, setLoading] = useState(false)
   const [weight, setWeight] = useState(repetition.weight)
@@ -29,6 +30,23 @@ export default function StoredRepetitionItem({ exercise, repetition, updateRepet
       setWeight(prev => prev + 1)
     } else {
       setRepetitions(prev => prev + 1)
+    }
+  }
+
+  const handleDelete = async () => {
+    setLoading(true)
+    const res = await fetch(`/api/workouts/repetitions/${exercise.id}/delete`, {
+      method: "POST",
+      body: JSON.stringify({ id: repetition.id }),
+      headers: { "Content-Type": "application/json" }
+    })
+    const data = await res.json()
+    setLoading(false)
+    if (res.ok) {
+      removeRepetition(repetition)
+      console.log(data)
+    } else {
+      console.error(data)
     }
   }
 
@@ -138,6 +156,7 @@ export default function StoredRepetitionItem({ exercise, repetition, updateRepet
         </button>
         <button
           type="button"
+          onClick={handleDelete}
           className="m-0.5 transition-colors flex justify-center items-center text-red-700 size-10 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
         >
           <Trash />
