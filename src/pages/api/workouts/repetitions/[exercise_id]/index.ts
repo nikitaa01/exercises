@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
-import { supabase } from "../../../../lib/supabase";
-import type { Tables } from "../../../../types/database";
+import { supabase } from "../../../../../lib/supabase";
+import type { Tables } from "../../../../../types/database";
 
 export const POST: APIRoute = async ({ params, cookies, request }) => {
   const { exercise_id } = params;

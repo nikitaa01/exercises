@@ -1,9 +1,9 @@
-export default function Spinner() {
+export default function Spinner({ size = "lg" }: { size?: "md" | "lg" }) {
     return (
         <svg
             aria-hidden="true"
             role="status"
-            class="inline w-4 h-4 me-3 text-white animate-spin"
+            className={`inline me-3 text-white animate-spin ${size === "md" && "size-3"} ${size === "lg" && "size-4"}`}
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
